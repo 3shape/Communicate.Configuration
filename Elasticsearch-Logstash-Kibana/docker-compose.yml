@@ -4,7 +4,7 @@ services:
     es-master:
         image: elasticsearch:2
         restart: always
-        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=3 --node.master=true --node.data=false --cluster.name=metrics --node.name=es-master --network.bind_host=0.0.0.0
+        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=1 --node.master=true --node.data=false --cluster.name=metrics --node.name=es-master --network.bind_host=0.0.0.0
         networks:
         - metrics-network
         environment:                                                                                                                                                                                                                                                                                        
@@ -14,7 +14,7 @@ services:
 
     es-data:
         image: elasticsearch:2
-        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=3 --node.master=false --node.data=true --cluster.name=metrics --node.name=es-data
+        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=1 --node.master=false --node.data=true --cluster.name=metrics --node.name=es-data
         restart: always
         depends_on:
             - es-master
@@ -24,7 +24,7 @@ services:
             - ES_HEAP_SIZE=4g
     es-client:
         image: elasticsearch:2
-        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=3 --node.master=false --node.data=false --cluster.name=metrics --node.name=es-client
+        command: elasticsearch -Des.bootstrap.mlockall=true --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts=es-master --discovery.zen.minimum_master_nodes=1 --node.master=false --node.data=false --cluster.name=metrics --node.name=es-client
         restart: always
         depends_on:
             - es-master
@@ -55,4 +55,3 @@ services:
 
 networks:
   metrics-network:
-    driver: overlay
